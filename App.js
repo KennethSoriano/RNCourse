@@ -15,7 +15,7 @@ export default function App() {
   function addGoalHandler() {
     setCourseGoals(currentCourseGoals => [
       ...currentCourseGoals, 
-      enteredGoalText,
+      {text: enteredGoalText, id: Math.random().toString()},
     ]);
   };
 
@@ -31,13 +31,18 @@ export default function App() {
           <Button title='Add Goal' onPress={addGoalHandler}/>
         </View>
         <View style={styles.goalsContainer}>
-          <ScrollView >
-            {courseGoals.map(() => {
-              <View style={styles.goalItem} key={goal}>
-                <Text style={styles.goalText} >{goal}</Text>
-              </View>
-            })}
-          </ScrollView>
+          <FlatList 
+            data={courseGoals} 
+            renderItem={(itemData) => {
+              return (
+                <GoalItem text={itemData.item.text}/>
+              );
+            }}  
+            keyExtractor={(item, index) => {
+              return item.id;
+            }}
+            alwaysBounceVertical={false}
+          />
         </View>
       </View>
     </>
@@ -70,14 +75,5 @@ const styles = StyleSheet.create({
   goalsContainer: {
     flex: 5,
   },
-  goalItem: {
-    margin: 8,
-    padding: 8,
-    borderRadius: 6,
-    backgroundColor: '#5e0acc',
-    color: 'white'
-  },
-  goalText: {
-    color: 'white'
-  }
+  
 });
